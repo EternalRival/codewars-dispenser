@@ -1,9 +1,12 @@
+import { useDispatch } from 'react-redux';
 import { Fragment } from 'react/jsx-runtime';
-import { useUserStore } from '../model/user.store';
+import { useSelector } from '~/app/store';
+import { updateUser } from '~/entities/user';
 import { Input } from '~/shared/ui/input';
 
 const UserList = () => {
-  const { users, updateUser } = useUserStore();
+  const users = useSelector((state) => state.users);
+  const dispatch = useDispatch();
 
   const cols = ['Name', 'Codewars Name', 'Kata'];
 
@@ -31,7 +34,7 @@ const UserList = () => {
                 value={user[prop]}
                 onChange={(event) => {
                   if (event.target instanceof HTMLInputElement) {
-                    updateUser(user.id, prop, event.target.value);
+                    dispatch(updateUser({ id: user.id, prop, value: event.target.value }));
                   }
                 }}
               />

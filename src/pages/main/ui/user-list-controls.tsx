@@ -1,28 +1,29 @@
+import { useDispatch } from '~/app/store';
+import { addUser, removeUser } from '~/entities/user';
 import { Button } from '~/shared/ui/button';
-import { useUserStore } from '../model/user.store';
 
 const UserListControls = () => {
-  const { addUser, removeUser } = useUserStore();
+  const dispatch = useDispatch();
 
   return (
     <div className="grid gap-2">
       <Button
         onClick={() => {
-          removeUser();
+          dispatch(removeUser());
         }}
       >
         -
       </Button>
       <Button
         onClick={() => {
-          addUser();
+          dispatch(addUser());
         }}
       >
         +
       </Button>
       <Button
         onClick={() => {
-          addUser();
+          alert('not implemented');
         }}
       >
         D
