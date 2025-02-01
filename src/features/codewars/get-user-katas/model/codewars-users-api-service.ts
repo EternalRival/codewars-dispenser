@@ -1,32 +1,35 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { userSchema } from './user.schema';
 import { completedChallengesSchema, type CompletedChallenges } from './completed-challenges.schema';
+import type { User } from '~/entities/user';
 
 const codewarsUsersApi = createApi({
   reducerPath: 'codewarsUser',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://www.codewars.com/api/v1/users/' }),
   endpoints: (builder) => ({
-    getUserCompletedChallengesByName: builder.query<CompletedChallenges['data'], string>({
+    getUserCompletedChallengesByName: builder.query<
+      { user: User; completedKatas: CompletedChallenges['data'] },
+      User
+    >({
       async queryFn(user, _queryApi, _extraOptions, fetchWithBQ) {
-        const getUserResult = await fetchWithBQ(user);
+        const endpoint = `${user.cw}/code-challenges/completed`;
 
-        if (getUserResult.error) {
-          return { error: getUserResult.error };
+        const firstPageData = await fetchWithBQ(endpoint);
+
+        if (firstPageData.error) {
+          return { error: firstPageData.error };
         }
 
-        const totalCompleted = userSchema
-          .transform(({ codeChallenges: { totalCompleted } }) => totalCompleted)
-          .parse(getUserResult.data);
+        const { data: firstPage, totalPages } = completedChallengesSchema.parse(firstPageData.data);
 
-        const completedChallenges = await Promise.all(
-          Array.from({ length: Math.ceil(totalCompleted / 200) }, async (_, page) => {
-            const getKatasResult = await fetchWithBQ(`${user}/code-challenges/completed?page=${page.toString()}`);
+        const restPages = await Promise.all(
+          Array.from({ length: totalPages - 1 }, async (_, i) => {
+            const getKatasResult = await fetchWithBQ(`${endpoint}?page=${(i + 1).toString()}`);
 
             return completedChallengesSchema.transform(({ data }) => data).parse(getKatasResult.data);
           })
         );
 
-        return { data: completedChallenges.flat() };
+        return { data: { user, completedKatas: firstPage.concat(...restPages) } };
       },
     }),
   }),

@@ -14,13 +14,7 @@ export const DispensedKatas = () => {
   const [getUserCompletedKatas] = useLazyGetUserCompletedChallengesByNameQuery();
 
   const getUsersData = () =>
-    Promise.all(
-      users.map(async (user) => {
-        const completedKatas = await getUserCompletedKatas(user.cw, true);
-
-        return { user, completedKatas: completedKatas.data };
-      })
-    );
+    Promise.all(users.map(async (user) => getUserCompletedKatas(user, true).then(({ data }) => data ?? { user })));
 
   const getForbiddenKatasData = () =>
     Promise.all(
@@ -34,6 +28,7 @@ export const DispensedKatas = () => {
 
     const forbiddenKatasData = await getForbiddenKatasData();
 
+    console.log(usersData);
     console.log(forbiddenKatasData);
 
     void usersData;

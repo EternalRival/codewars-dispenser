@@ -6,6 +6,7 @@ const completedChallengeSchema = z.object({
 });
 
 export const completedChallengesSchema = z.object({
+  totalPages: z.number(),
   data: z.array(completedChallengeSchema),
 });
 
