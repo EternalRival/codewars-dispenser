@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import LSService from '~/shared/lib/local-storage.service';
+import { LSService } from '~/shared/lib/local-storage.service';
 import type { User } from './user.schema';
-import usersStateSchema, { type UsersState } from './users-state.schema';
+import { type UsersState, usersStateSchema } from './users-state.schema';
 
 const SLICE_NAME = 'users';
 
@@ -40,4 +40,4 @@ export function persistUsersState(getState: () => UsersState) {
   });
 }
 
-export default { [usersSlice.reducerPath]: usersSlice.reducer };
+export const usersReducer = { [usersSlice.reducerPath]: usersSlice.reducer };

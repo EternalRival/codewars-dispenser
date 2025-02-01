@@ -12,5 +12,3 @@ export const LSService = {
 };
 
 export const LocalStorageService = LSService;
-
-export default LSService;

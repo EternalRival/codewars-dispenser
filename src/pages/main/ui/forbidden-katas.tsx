@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from '~/app/store';
 import { updateForbiddenKatas } from '~/entities/kata';
 import { Textarea } from '~/shared/ui/textarea';
 
-const ForbiddenKatas = () => {
+export const ForbiddenKatas = () => {
   const value = useSelector((store) => store.katas.rawForbiddenKatas);
   const dispatch = useDispatch();
 
@@ -17,5 +17,3 @@ const ForbiddenKatas = () => {
     />
   );
 };
-
-export default ForbiddenKatas;

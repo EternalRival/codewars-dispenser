@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import LSService from '~/shared/lib/local-storage.service';
-import katasStateSchema, { type KatasState } from './katas-state.schema';
+import { LSService } from '~/shared/lib/local-storage.service';
+import { katasStateSchema, type KatasState } from './katas-state.schema';
 
 const SLICE_NAME = 'katas';
 
@@ -26,4 +26,4 @@ export function persistKatasState(getState: () => KatasState) {
   });
 }
 
-export default { [katasSlice.reducerPath]: katasSlice.reducer };
+export const katasReducer = { [katasSlice.reducerPath]: katasSlice.reducer };

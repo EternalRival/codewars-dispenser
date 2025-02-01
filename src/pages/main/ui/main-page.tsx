@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/shared/ui/accordion';
-import DispensedKatas from './dispensed-katas';
-import ForbiddenKatas from './forbidden-katas';
-import SuggestedKatas from './suggested-katas';
-import UserList from './user-list';
+import { DispensedKatas } from './dispensed-katas';
+import { ForbiddenKatas } from './forbidden-katas';
+import { SuggestedKatas } from './suggested-katas';
+import { UserList } from './user-list';
 
 // flex min-h-screen max-w-screen-sm flex-col items-center justify-center
 
@@ -21,7 +21,7 @@ const accordionSections = [
   [AccordionSection.DISPENSED_KATAS, DispensedKatas],
 ] as const;
 
-const MainPage = () => {
+export const MainPage = () => {
   const [expanded, setExpanded] = useState<string[]>([
     AccordionSection.USERS,
     AccordionSection.SUGGESTED_KATAS,
@@ -51,5 +51,3 @@ const MainPage = () => {
     </main>
   );
 };
-
-export default MainPage;

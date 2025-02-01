@@ -1,1 +1,1 @@
-export { addUser, persistUsersState, removeUser, updateUser, default as usersReducer } from './model/users-slice';
+export { addUser, persistUsersState, removeUser, updateUser, usersReducer } from './model/users-slice';

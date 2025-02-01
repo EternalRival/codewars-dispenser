@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from '~/app/store';
 import { updateSuggestedKatas } from '~/entities/kata';
 import { Textarea } from '~/shared/ui/textarea';
 
-const SuggestedKatas = () => {
+export const SuggestedKatas = () => {
   const value = useSelector((store) => store.katas.rawSuggestedKatas);
   const dispatch = useDispatch();
 
@@ -17,5 +17,3 @@ const SuggestedKatas = () => {
     />
   );
 };
-
-export default SuggestedKatas;

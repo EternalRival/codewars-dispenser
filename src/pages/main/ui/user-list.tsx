@@ -12,7 +12,7 @@ const colsMap: Record<(typeof cols)[number], string> = {
   cw: 'Codewars Name',
 };
 
-const UserList = () => {
+export const UserList = () => {
   const users = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
@@ -64,5 +64,3 @@ const UserList = () => {
     </div>
   );
 };
-
-export default UserList;
