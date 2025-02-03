@@ -8,6 +8,8 @@ export const SuggestedKatas = () => {
 
   return (
     <Textarea
+      className="text-sm"
+      rows={4}
       value={value}
       onChange={(event) => {
         if (event.target instanceof HTMLTextAreaElement) {

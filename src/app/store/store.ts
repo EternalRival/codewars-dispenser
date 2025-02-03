@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { katasReducer, persistKatasState } from '~/entities/kata';
 import { persistUsersState, usersReducer } from '~/entities/user';
+import { codewarsKatasApiMiddleware, codewarsKatasApiReducer } from '~/features/codewars/get-katas';
 import { codewarsUsersApiMiddleware, codewarsUsersApiReducer } from '~/features/codewars/get-user-katas';
 
 export const store = configureStore({
@@ -8,9 +9,11 @@ export const store = configureStore({
     ...usersReducer,
     ...katasReducer,
     ...codewarsUsersApiReducer,
+    ...codewarsKatasApiReducer,
   },
 
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(codewarsUsersApiMiddleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(codewarsUsersApiMiddleware, codewarsKatasApiMiddleware),
 });
 
 persistUsersState(() => store.getState().users);

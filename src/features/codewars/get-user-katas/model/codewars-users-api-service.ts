@@ -1,17 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { completedChallengesSchema, type CompletedChallenges } from './completed-challenges.schema';
-import type { User } from '~/entities/user';
 
 const codewarsUsersApi = createApi({
-  reducerPath: 'codewarsUser',
+  reducerPath: 'codewarsUsers',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://www.codewars.com/api/v1/users/' }),
   endpoints: (builder) => ({
-    getUserCompletedChallengesByName: builder.query<
-      { user: User; completedKatas: CompletedChallenges['data'] },
-      User
-    >({
+    getUserCompletedChallengesByName: builder.query<CompletedChallenges['data'], string>({
       async queryFn(user, _queryApi, _extraOptions, fetchWithBQ) {
-        const endpoint = `${user.cw}/code-challenges/completed`;
+        const endpoint = `${user}/code-challenges/completed`;
 
         const firstPageData = await fetchWithBQ(endpoint);
 
@@ -29,7 +25,7 @@ const codewarsUsersApi = createApi({
           })
         );
 
-        return { data: { user, completedKatas: firstPage.concat(...restPages) } };
+        return { data: firstPage.concat(...restPages) };
       },
     }),
   }),

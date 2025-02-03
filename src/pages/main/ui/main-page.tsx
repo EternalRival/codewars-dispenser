@@ -18,7 +18,7 @@ const accordionSections = [
   [AccordionSection.USERS, UserList],
   [AccordionSection.FORBIDDEN_KATAS, ForbiddenKatas],
   [AccordionSection.SUGGESTED_KATAS, SuggestedKatas],
-  [AccordionSection.DISPENSED_KATAS, DispensedKatas],
+  // [AccordionSection.DISPENSED_KATAS, DispensedKatas],
 ] as const;
 
 export const MainPage = () => {
@@ -47,6 +47,17 @@ export const MainPage = () => {
             </AccordionContent>
           </AccordionItem>
         ))}
+        <AccordionItem value={AccordionSection.DISPENSED_KATAS}>
+          <AccordionTrigger
+            className="pointer-events-none"
+            disabled
+          >
+            {AccordionSection.DISPENSED_KATAS}
+          </AccordionTrigger>
+          <AccordionContent>
+            <DispensedKatas />
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </main>
   );
