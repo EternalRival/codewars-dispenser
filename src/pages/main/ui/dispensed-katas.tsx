@@ -44,7 +44,7 @@ export const DispensedKatas = () => {
         (acc, [username, solvedKatas]) =>
           acc.set(
             username,
-            sortedAvailableKatas.filter((kata) => solvedKatas.some((solvedKata) => solvedKata.id === kata.id))
+            sortedAvailableKatas.filter((kata) => !solvedKatas.some((solvedKata) => solvedKata.id === kata.id))
           ),
         new Map<string, CodeChallenge[]>()
       );
