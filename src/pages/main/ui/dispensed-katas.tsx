@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { useSelector } from '~/app/store';
 import type { CodeChallenge } from '~/features/codewars/get-katas';
 import { useGetKatasData } from '~/features/codewars/get-katas';
-import { areUsersUnique, parseKataSlugs, useGetUsersData } from '~/features/codewars/get-user-katas';
+import { areUsersUnique, useGetUsersData } from '~/features/codewars/get-user-katas';
 import { Button } from '~/shared/ui/button';
 
 export const DispensedKatas = () => {
@@ -26,16 +26,9 @@ export const DispensedKatas = () => {
         throw new Error('users must be unique!');
       }
 
-      const suggestedSlugs = parseKataSlugs(katas.rawSuggestedKatas);
-      const forbiddenSlugsSet = new Set(parseKataSlugs(katas.rawForbiddenKatas));
-
-      if (suggestedSlugs.some((slug) => forbiddenSlugsSet.has(slug))) {
-        throw new Error('remove forbidden katas from suggested katas!');
-      }
-
       const [{ notFoundUsers, usersKatas }, { availableKatas, forbiddenKatas, notFoundKatas }] = await Promise.all([
         getUsersData(users),
-        getKatasData({ forbiddenSlugsSet, suggestedSlugs }),
+        getKatasData(katas),
       ]);
 
       const sortedAvailableKatas = Array.from(availableKatas).toSorted((a, b) => a.name.localeCompare(b.name));

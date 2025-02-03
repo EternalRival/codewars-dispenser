@@ -1,16 +1,14 @@
+import { parseKataSlugs } from '../../get-user-katas';
 import type { CodeChallenge } from './code-challenge.schema';
 import { useLazyGetKataQuery } from './codewars-katas-api-service';
 
 export function useGetKatasData() {
   const [getKatas] = useLazyGetKataQuery();
 
-  return async ({
-    forbiddenSlugsSet,
-    suggestedSlugs,
-  }: {
-    forbiddenSlugsSet: Set<string>;
-    suggestedSlugs: string[];
-  }) => {
+  return async ({ rawForbiddenKatas, rawSuggestedKatas }: { rawForbiddenKatas: string; rawSuggestedKatas: string }) => {
+    const suggestedSlugs = parseKataSlugs(rawSuggestedKatas);
+    const forbiddenSlugsSet = new Set(parseKataSlugs(rawForbiddenKatas));
+
     const getKatasResult = await Promise.all(
       suggestedSlugs.map(async (slug) => {
         const { data } = await getKatas(slug, true);

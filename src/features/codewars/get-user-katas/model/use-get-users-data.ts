@@ -2,16 +2,28 @@ import type { User } from '~/entities/user';
 import { useLazyGetUserCompletedChallengesByNameQuery } from './codewars-users-api-service';
 import type { CompletedChallenges } from './completed-challenges.schema';
 
+type CompletedKatas = CompletedChallenges['data'];
+
+type Entries = [string, CompletedKatas | undefined];
+
 export function useGetUsersData() {
   const [getUserCompletedKatas] = useLazyGetUserCompletedChallengesByNameQuery();
 
   return async (users: User[]) => {
     const entries = await Promise.all(
-      users.map(async (user) => {
-        const { data } = await getUserCompletedKatas(user.cw, true);
+      users.reduce<Promise<Entries>[]>((acc, user) => {
+        const trimmedUser = {
+          id: user.id,
+          name: user.name.trim(),
+          cw: user.cw.trim(),
+        };
 
-        return [user.cw, data] as const;
-      })
+        if (trimmedUser.cw) {
+          acc.push(getUserCompletedKatas(user.cw, true).then(({ data }) => [user.cw, data] as const));
+        }
+
+        return acc;
+      }, [])
     );
 
     return entries.reduce(
@@ -24,7 +36,7 @@ export function useGetUsersData() {
 
         return acc;
       },
-      { notFoundUsers: new Set<string>(), usersKatas: new Map<string, CompletedChallenges['data']>() }
+      { notFoundUsers: new Set<string>(), usersKatas: new Map<string, CompletedKatas>() }
     );
   };
 }
