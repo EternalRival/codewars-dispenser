@@ -1,14 +1,33 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useSelector } from '~/app/store';
+import type { User } from '~/entities/user';
 import type { CodeChallenge } from '~/features/codewars/get-katas';
 import { useGetKatasData } from '~/features/codewars/get-katas';
 import { areUsersUnique, useGetUsersData } from '~/features/codewars/get-user-katas';
 import { Button } from '~/shared/ui/button';
 
 export const DispensedKatas = () => {
-  const katas = useSelector((store) => store.katas);
-  const users = useSelector((store) => store.users);
+  const rawKatas = useSelector((store) => store.katas);
+  const rawUsers = useSelector((store) => store.users);
+
+  const users = useMemo(
+    () =>
+      rawUsers.reduce<User[]>((acc, user) => {
+        const trimmedUser = {
+          id: user.id,
+          name: user.name.trim(),
+          cw: user.cw.trim(),
+        };
+
+        if (trimmedUser.cw) {
+          acc.push(trimmedUser);
+        }
+
+        return acc;
+      }, []),
+    [rawUsers]
+  );
 
   const [codewarsData, setCodewarsData] = useState({
     forbiddenKatas: new Set<[string, CodeChallenge]>(),
@@ -28,7 +47,7 @@ export const DispensedKatas = () => {
 
       const [{ notFoundUsers, usersKatas }, { availableKatas, forbiddenKatas, notFoundKatas }] = await Promise.all([
         getUsersData(users),
-        getKatasData(katas),
+        getKatasData(rawKatas),
       ]);
 
       const sortedAvailableKatas = Array.from(availableKatas).toSorted((a, b) => a.name.localeCompare(b.name));
